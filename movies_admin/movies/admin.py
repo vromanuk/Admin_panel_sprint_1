@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Filmwork
+from .models import Movie
 
 
-@admin.register(Filmwork)
-class FilmworkAdmin(admin.ModelAdmin):
+@admin.register(Movie)
+class MovieAdmin(admin.ModelAdmin):
     # отображение полей в списке
     list_display = ("title", "type", "creation_date", "rating", "created", "modified")
 
