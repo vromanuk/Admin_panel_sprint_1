@@ -1,0 +1,45 @@
+[
+  {
+    "model": "movies.person",
+    "pk": 1,
+    "fields": {
+      "created": "2021-06-06T10:27:43.643Z",
+      "modified": "2021-06-06T10:27:43.643Z",
+      "first_name": "Alexander",
+      "last_name": "Perez",
+      "role": "режиссёр",
+      "uuid": "87bc6b5e-e1c0-4c9e-99ee-b2bb9d9ce715"
+    }
+  },
+  {
+    "model": "movies.genre",
+    "pk": 1,
+    "fields": {
+      "created": "2021-06-06T10:28:06.465Z",
+      "modified": "2021-06-06T10:28:06.465Z",
+      "genre": "Sci-Fi"
+    }
+  },
+  {
+    "model": "movies.filmwork",
+    "pk": 1,
+    "fields": {
+      "created": "2021-06-06T10:28:33.390Z",
+      "modified": "2021-06-06T10:28:33.396Z",
+      "title": "Movie Title0",
+      "description": "Movie Description0",
+      "creation_date": "2021-06-06",
+      "certificate": "Movie Certificate0",
+      "file_path": "",
+      "rating": 1.0,
+      "type": "movie",
+      "uuid": "8d4d4409-247b-4f79-b097-06d9e81bfa4b",
+      "genres": [
+        1
+      ],
+      "people": [
+        1
+      ]
+    }
+  }
+]
