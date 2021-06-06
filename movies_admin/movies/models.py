@@ -45,8 +45,8 @@ class FilmWork(TimeStampedModel):
     rating = models.FloatField(_("рейтинг"), validators=[MinValueValidator(0)], blank=True)
     type = models.CharField(_("тип"), max_length=20, choices=MovieType.choices)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    genres = models.ManyToManyField(Genre)
-    people = models.ManyToManyField(Person)
+    genres = models.ManyToManyField(Genre, related_name="film_works")
+    people = models.ManyToManyField(Person, related_name="film_works")
 
     class Meta:
         verbose_name = _("кинопроизведение")
