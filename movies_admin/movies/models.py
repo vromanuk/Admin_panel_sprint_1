@@ -39,7 +39,7 @@ class MovieType(models.TextChoices):
     TV_SHOW = "tv_show", _("шоу")
 
 
-class Movie(TimeStampedModel):
+class FilmWork(TimeStampedModel):
     title = models.CharField(_("название"), max_length=255)
     description = models.TextField(_("описание"), blank=True)
     creation_date = models.DateField(_("дата создания фильма"), blank=True)
@@ -61,5 +61,5 @@ class Movie(TimeStampedModel):
 
 class Cast(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    film_work = models.ForeignKey(FilmWork, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
