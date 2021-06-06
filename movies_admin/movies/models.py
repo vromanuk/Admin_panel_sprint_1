@@ -44,7 +44,7 @@ class FilmWork(TimeStampedModel):
     description = models.TextField(_("описание"), blank=True)
     creation_date = models.DateField(_("дата создания фильма"), blank=True)
     certificate = models.TextField(_("сертификат"), blank=True)
-    file_path = models.FileField(_("файл"), upload_to="film_works/", blank=True)
+    file_path = models.FileField(_("файл"), upload_to="film_works/", blank=True, null=True)
     rating = models.FloatField(_("рейтинг"), validators=[MinValueValidator(0)], blank=True)
     type = models.CharField(_("тип"), max_length=20, choices=MovieType.choices)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
