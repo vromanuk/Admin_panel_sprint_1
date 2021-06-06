@@ -2,13 +2,12 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.translation import gettext_lazy as _
-
-from .models import FilmWork, Genre, Person
+from members.utils import is_admin, is_view_only
+from movies.models import FilmWork, Genre, Person
 
 
 @admin.register(FilmWork)
 class MovieAdmin(admin.ModelAdmin):
-    filter_horizonal = ("people", "genres")
     list_display = ("title", "type", "creation_date", "rating", "created", "modified")
     list_filter = ("created", "title")
     search_fields = ("title", "description", "id")
@@ -24,6 +23,18 @@ class MovieAdmin(admin.ModelAdmin):
         "genres",
         "people",
     )
+
+    def has_view_permission(self, request, obj=None):
+        return is_admin(request.user) or is_view_only(request.user)
+
+    def has_add_permission(self, request):
+        return is_admin(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_admin(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return is_admin(request.user)
 
 
 class PersonAdminForm(forms.ModelForm):
@@ -62,9 +73,33 @@ class PersonAdmin(admin.ModelAdmin):
 
     search_fields = ("first_name", "last_name")
 
+    def has_view_permission(self, request, obj=None):
+        return is_admin(request.user) or is_view_only(request.user)
+
+    def has_add_permission(self, request):
+        return is_admin(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_admin(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return is_admin(request.user)
+
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     list_display = ("genre", "id")
     list_filter = ("genre",)
     search_fields = ("genre",)
+
+    def has_view_permission(self, request, obj=None):
+        return is_admin(request.user) or is_view_only(request.user)
+
+    def has_add_permission(self, request):
+        return is_admin(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_admin(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return is_admin(request.user)
