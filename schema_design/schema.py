@@ -32,16 +32,7 @@ with conn.cursor() as cur:
             id uuid PRIMARY KEY,
             first_name VARCHAR(45) NOT NULL,
             last_name VARCHAR(45) NOT NULL,
-        );
-    """
-    )
-
-    cur.execute(
-        """
-    -- Роли — Актер, Режиссер, Сценарист
-        CREATE TABLE IF NOT EXISTS content.roles (
-            id serial PRIMARY KEY,
-            role VARCHAR(45) UNIQUE NOT NULL,
+            role VARCHAR(45) NOT NULL,
         );
     """
     )
@@ -52,7 +43,6 @@ with conn.cursor() as cur:
         CREATE TABLE IF NOT EXISTS content.movie_people (
             person_id uuid NOT NULL,
             movie_id uuid NOT NULL,
-            FOREIGN KEY (role_id) REFERENCES content.roles (id),
             FOREIGN KEY (person_id) REFERENCES content.people (id) ON UPDATE CASCADE,
             FOREIGN KEY (movie_id) REFERENCES content.movies (id) ON UPDATE CASCADE,
         );
