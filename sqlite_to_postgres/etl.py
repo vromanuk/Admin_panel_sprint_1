@@ -48,18 +48,16 @@ class PostgresSaver:
         self.conn = conn
 
     def save_all_data(self, records: List[dict]):
+        genres = []
+        movie_people = []
+        movie_genres = []
+
+        for record in records:
+            genres.append(record["genres"])
+            movie_people.append(record["movie_people"])
+            movie_genres.append(record["movie_genres"])
+
         with self.conn.cursor() as cur:
-            movies = []
-            genres = []
-            movie_people = []
-            movie_genres = []
-
-            for record in records:
-                movies.append(record["movie"])
-                genres.append(record["genres"])
-                movie_people.append(record["movie_people"])
-                movie_genres.append(record["movie_genres"])
-
             print("insert movies")
             execute_batch(
                 cur,
@@ -67,7 +65,7 @@ class PostgresSaver:
                     INSERT INTO content.film_work (id, title, rating, description, type, created_at)
                     VALUES (%s, %s, %s, %s, %s, now())
                 """,
-                [astuple(movie) for movie in movies],
+                [astuple(record["movie"]) for record in records],
                 page_size=5_000,
             )
             self.conn.commit()
@@ -117,23 +115,23 @@ class PostgresSaver:
 
     @staticmethod
     def unify_genres(genres: list[list[Genre]], movie_genres: list[dict]) -> tuple[list[Genre], list[MovieGenres]]:
-        existent_genres = {}
+        existent_genres = set()
         unified_genres = []
         unified_movie_genres = []
-        for _ in genres:
-            for genre in _:
+        for duplicate_genres in genres:
+            for genre in duplicate_genres:
                 current_genre = genre.genre
-                if existent_genres.get(current_genre):
+                if current_genre in existent_genres:
                     continue
-                else:
-                    unified_genres.append(genre)
-                    existent_genres[current_genre] = genre.id
+                unified_genres.append(genre)
+                existent_genres.add(current_genre)
 
         for data in movie_genres:
             movie_id = data["movie_id"]
             for movie_genre in data["genres"]:
-                id_ = str(uuid.uuid4())
-                unified_movie_genres.append(MovieGenres(id=id_, movie_id=movie_id, genre=movie_genre.genre))
+                unified_movie_genres.append(
+                    MovieGenres(id=str(uuid.uuid4()), movie_id=movie_id, genre=movie_genre.genre)
+                )
         return unified_genres, unified_movie_genres
 
     @staticmethod
@@ -145,14 +143,13 @@ class PostgresSaver:
         for data in movie_people:
             for person in data["people"]:
                 name = person.name
-                if existent_people.get(name):
+                if name in existent_people:
                     continue
-                else:
-                    unified_movie_people.append(
-                        MoviePeople(id=str(uuid.uuid4()), movie_id=data["movie_id"], person_id=person.id)
-                    )
-                    unified_people.append(person)
-                    existent_people[name] = person.id
+                unified_movie_people.append(
+                    MoviePeople(id=str(uuid.uuid4()), movie_id=data["movie_id"], person_id=person.id)
+                )
+                unified_people.append(person)
+                existent_people[name] = person.id
 
         return unified_people, unified_movie_people
 
@@ -206,7 +203,7 @@ class SQLiteLoader:
         """
         writers = {}
         # Используем DISTINCT, чтобы отсекать возможные дубли
-        for writer in self.conn.execute("""SELECT DISTINCT id, name FROM writers"""):
+        for writer in self.conn.execute("""SELECT id, name FROM writers"""):
             w = Person(id=str(uuid.uuid4()), name=writer[1])
             writers[writer[0]] = w
         return writers
