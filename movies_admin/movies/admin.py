@@ -6,11 +6,16 @@ from members.utils import is_admin, is_view_only
 from movies.models import FilmWork, Genre, Person
 
 
+class CastInlineAdmin(admin.TabularInline):
+    model = FilmWork.people.through
+
+
 @admin.register(FilmWork)
 class MovieAdmin(admin.ModelAdmin):
     list_display = ("title", "type", "creation_date", "rating", "created", "modified")
     list_filter = ("created", "title")
     search_fields = ("title", "description", "id")
+    inlines = (CastInlineAdmin,)
 
     fields = (
         "title",
@@ -21,7 +26,6 @@ class MovieAdmin(admin.ModelAdmin):
         "file_path",
         "rating",
         "genres",
-        "people",
     )
 
     def has_view_permission(self, request, obj=None):

@@ -26,11 +26,9 @@ env = environ.Env(DEBUG=(bool, False))
 environ.Env.read_env()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = env.bool("DEBUG", default=False)
 
-SECRET_KEY = env("SECRET_KEY")
-
-# SECRET_KEY =
+SECRET_KEY = env.str("SECRET_KEY")
 
 
 ALLOWED_HOSTS = []
@@ -83,8 +81,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env.str("DB_NAME"),
+        "USER": env.str("DB_USERNAME"),
+        "PASSWORD": env.str("DB_PASSWORD"),
+        "HOST": env.str("DB_HOST"),
+        "PORT": env.str("DB_PORT"),
+        "OPTIONS": {"options": "-c search_path=content,public"},
     }
 }
 
