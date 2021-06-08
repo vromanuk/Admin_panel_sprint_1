@@ -1,4 +1,5 @@
 import json
+import logging
 import sqlite3
 import uuid
 from dataclasses import astuple, dataclass
@@ -6,6 +7,8 @@ from typing import List
 
 from psycopg2.extensions import connection as _connection
 from psycopg2.extras import execute_batch
+
+logging.basicConfig(format="[%(asctime)s: %(levelname)s] %(message)s", level=logging.INFO)
 
 
 @dataclass
@@ -58,7 +61,7 @@ class PostgresSaver:
             movie_genres.append(record["movie_genres"])
 
         with self.conn.cursor() as cur:
-            print("insert movies")
+            logging.info("insert movies")
             execute_batch(
                 cur,
                 """
@@ -69,10 +72,10 @@ class PostgresSaver:
                 page_size=5_000,
             )
             self.conn.commit()
-            print("movies has been inserted")
+            logging.info("movies has been inserted")
 
             people, movie_people = self.unify_people(movie_people)
-            print("insert people")
+            logging.info("insert people")
             execute_batch(
                 cur,
                 "INSERT INTO content.person (id, name) VALUES (%s, %s)",
@@ -80,9 +83,9 @@ class PostgresSaver:
                 page_size=5_000,
             )
             self.conn.commit()
-            print("people has been inserted")
+            logging.info("people has been inserted")
 
-            print("insert movie_people")
+            logging.info("insert movie_people")
             execute_batch(
                 cur,
                 "INSERT INTO content.person_film_work (id, film_work_id, person_id) VALUES (%s, %s, %s)",
@@ -90,10 +93,11 @@ class PostgresSaver:
                 page_size=5_000,
             )
             self.conn.commit()
-            print("movie_people has been inserted")
+            logging.info("movie_people has been inserted")
 
             genres, movie_genres = self.unify_genres(genres, movie_genres)
-            print("insert genres")
+
+            logging.info("insert genres")
             execute_batch(
                 cur,
                 "INSERT INTO content.genre (id, genre) VALUES (%s, %s)",
@@ -101,9 +105,9 @@ class PostgresSaver:
                 page_size=5_000,
             )
             self.conn.commit()
-            print("genres has been inserted")
+            logging.info("genres has been inserted")
 
-            print("insert movie_genres")
+            logging.info("insert movie_genres")
             execute_batch(
                 cur,
                 "INSERT INTO content.genre_film_work (id, film_work_id, genre) VALUES (%s, %s, %s)",
@@ -111,7 +115,7 @@ class PostgresSaver:
                 page_size=5_000,
             )
             self.conn.commit()
-            print("movie_genres has been inserted")
+            logging.info("movie_genres has been inserted")
 
     @staticmethod
     def unify_genres(genres: list[list[Genre]], movie_genres: list[dict]) -> tuple[list[Genre], list[MovieGenres]]:
