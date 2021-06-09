@@ -25,7 +25,7 @@ class Role(TimeStampedModel):
         DIRECTOR = "director", _("режиссёр")
         WRITER = "writer", _("сценарист")
 
-    role = models.CharField(_("тип"), max_length=45, choices=RoleType.choices)
+    role = models.CharField(_("тип"), max_length=45, choices=RoleType.choices, unique=True)
 
     def __str__(self):
         return self.role
