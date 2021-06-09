@@ -17,5 +17,6 @@ class PersonFactory(factory.django.DjangoModelFactory):
 class RoleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Role
+        django_get_or_create = ("role",)
 
     role = factory.fuzzy.FuzzyChoice(Role.RoleType.choices, getter=lambda c: c[0])

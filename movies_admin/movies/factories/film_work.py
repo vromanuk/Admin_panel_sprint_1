@@ -12,10 +12,10 @@ class FilmWorkFactory(factory.django.DjangoModelFactory):
         model = FilmWork
         django_get_or_create = ("uuid",)
 
-    title = factory.Sequence(lambda n: "Movie Title%s" % n)
-    description = factory.Sequence(lambda n: "Movie Description%s" % n)
+    title = factory.Sequence(lambda n: "Movie Title %s" % n)
+    description = factory.Sequence(lambda n: "Movie Description %s" % n)
     creation_date = factory.LazyFunction(datetime.datetime.now)
-    certificate = factory.Sequence(lambda n: "Movie Certificate%s" % n)
+    certificate = factory.Sequence(lambda n: "Movie Certificate %s" % n)
     rating = random.randint(0, 9)
     type = factory.fuzzy.FuzzyChoice(FilmWork.MovieType.choices, getter=lambda c: c[0])
     uuid = uuid.uuid4()
@@ -35,14 +35,8 @@ class FilmWorkFactory(factory.django.DjangoModelFactory):
 class CastFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Cast
+        django_get_or_create = ("person", "film_work", "role")
 
     person = factory.SubFactory(PersonFactory)
     film_work = factory.SubFactory(FilmWorkFactory)
     role = factory.SubFactory(RoleFactory)
-
-
-class PersonWithFilmFactory(PersonFactory):
-    cast = factory.RelatedFactory(
-        CastFactory,
-        factory_related_name="person",
-    )

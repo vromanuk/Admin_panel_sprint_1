@@ -70,6 +70,3 @@ class Cast(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     film_work = models.ForeignKey(FilmWork, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ("person", "film_work")
