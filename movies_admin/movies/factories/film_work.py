@@ -3,8 +3,7 @@ import random
 import uuid
 
 import factory
-
-from ..models import FilmWork, MovieType
+from movies.models import FilmWork
 
 
 class FilmWorkFactory(factory.django.DjangoModelFactory):
@@ -17,7 +16,7 @@ class FilmWorkFactory(factory.django.DjangoModelFactory):
     creation_date = factory.LazyFunction(datetime.datetime.now)
     certificate = factory.Sequence(lambda n: "Movie Certificate%s" % n)
     rating = random.randint(0, 9)
-    type = MovieType.MOVIE
+    type = FilmWork.MovieType.MOVIE
     uuid = uuid.uuid4()
 
     @factory.post_generation

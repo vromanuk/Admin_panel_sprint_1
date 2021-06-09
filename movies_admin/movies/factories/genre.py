@@ -2,8 +2,7 @@ import random
 
 import factory
 from django.utils.translation import gettext_lazy as _
-
-from ..models import Genre
+from movies.models import Genre
 
 genres = [_("Action"), _("Adventure"), _("Fantasy"), _("Sci-Fi"), _("Drama"), _("Music"), _("Thriller"), _("Comedy")]
 

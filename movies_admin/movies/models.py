@@ -19,13 +19,12 @@ class Person(TimeStampedModel):
         return f"{self.first_name} {self.last_name}"
 
 
-class RoleType(models.TextChoices):
-    ACTOR = "actor", _("актёр")
-    DIRECTOR = "director", _("режиссёр")
-    WRITER = "writer", _("сценарист")
-
-
 class Role(TimeStampedModel):
+    class RoleType(models.TextChoices):
+        ACTOR = "actor", _("актёр")
+        DIRECTOR = "director", _("режиссёр")
+        WRITER = "writer", _("сценарист")
+
     role = models.CharField(_("тип"), max_length=45, choices=RoleType.choices)
 
 
@@ -40,12 +39,11 @@ class Genre(TimeStampedModel):
         return self.genre
 
 
-class MovieType(models.TextChoices):
-    MOVIE = "movie", _("фильм")
-    TV_SHOW = "tv_show", _("шоу")
-
-
 class FilmWork(TimeStampedModel):
+    class MovieType(models.TextChoices):
+        MOVIE = "movie", _("фильм")
+        TV_SHOW = "tv_show", _("шоу")
+
     title = models.CharField(_("название"), max_length=255)
     description = models.TextField(_("описание"), blank=True)
     creation_date = models.DateField(_("дата создания фильма"), blank=True)

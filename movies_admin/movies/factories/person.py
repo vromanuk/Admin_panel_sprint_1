@@ -3,8 +3,7 @@ import uuid
 
 import factory
 from django.utils.translation import gettext_lazy as _
-
-from ..models import Person
+from movies.models import Person
 
 roles = [_("актёр"), _("сценарист"), _("режиссёр")]
 
