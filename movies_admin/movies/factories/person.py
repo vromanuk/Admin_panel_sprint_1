@@ -1,11 +1,7 @@
-import random
 import uuid
 
-import factory
-from django.utils.translation import gettext_lazy as _
-from movies.models import Person
-
-roles = [_("актёр"), _("сценарист"), _("режиссёр")]
+import factory.fuzzy
+from movies.models import Person, Role
 
 
 class PersonFactory(factory.django.DjangoModelFactory):
@@ -15,5 +11,11 @@ class PersonFactory(factory.django.DjangoModelFactory):
 
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    role = random.choice(roles)
     uuid = uuid.uuid4()
+
+
+class RoleFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Role
+
+    role = factory.fuzzy.FuzzyChoice(Role.RoleType.choices, getter=lambda c: c[0])

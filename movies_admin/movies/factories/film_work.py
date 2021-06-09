@@ -2,8 +2,9 @@ import datetime
 import random
 import uuid
 
-import factory
-from movies.models import FilmWork
+import factory.fuzzy
+from movies.factories.person import PersonFactory, RoleFactory
+from movies.models import Cast, FilmWork
 
 
 class FilmWorkFactory(factory.django.DjangoModelFactory):
@@ -16,7 +17,7 @@ class FilmWorkFactory(factory.django.DjangoModelFactory):
     creation_date = factory.LazyFunction(datetime.datetime.now)
     certificate = factory.Sequence(lambda n: "Movie Certificate%s" % n)
     rating = random.randint(0, 9)
-    type = FilmWork.MovieType.MOVIE
+    type = factory.fuzzy.FuzzyChoice(FilmWork.MovieType.choices, getter=lambda c: c[0])
     uuid = uuid.uuid4()
 
     @factory.post_generation
@@ -30,13 +31,18 @@ class FilmWorkFactory(factory.django.DjangoModelFactory):
             for genre in extracted:
                 self.genres.add(genre)
 
-    @factory.post_generation
-    def people(self, create, extracted, **kwargs):
-        if not create:
-            # Simple build, do nothing.
-            return
 
-        if extracted:
-            # A list of genres were passed in, use them
-            for person in extracted:
-                self.people.add(person)
+class CastFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Cast
+
+    person = factory.SubFactory(PersonFactory)
+    film_work = factory.SubFactory(FilmWorkFactory)
+    role = factory.SubFactory(RoleFactory)
+
+
+class PersonWithFilmFactory(PersonFactory):
+    cast = factory.RelatedFactory(
+        CastFactory,
+        factory_related_name="person",
+    )
