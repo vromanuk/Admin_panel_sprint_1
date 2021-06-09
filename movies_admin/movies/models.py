@@ -27,6 +27,9 @@ class Role(TimeStampedModel):
 
     role = models.CharField(_("тип"), max_length=45, choices=RoleType.choices)
 
+    def __str__(self):
+        return self.role
+
 
 class Genre(TimeStampedModel):
     genre = models.CharField(_("название"), max_length=45, unique=True)
