@@ -9,8 +9,8 @@ class PersonFactory(factory.django.DjangoModelFactory):
         model = Person
         django_get_or_create = ("uuid",)
 
-    first_name = factory.Faker("first_name")
-    last_name = factory.Faker("last_name")
+    first_name = factory.Sequence(lambda n: "user {:02}".format(n))
+    last_name = factory.Sequence(lambda n: "last {:02}".format(n))
     uuid = uuid.uuid4()
 
 

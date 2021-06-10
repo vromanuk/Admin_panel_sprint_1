@@ -12,10 +12,10 @@ class FilmWorkFactory(factory.django.DjangoModelFactory):
         model = FilmWork
         django_get_or_create = ("uuid",)
 
-    title = factory.Sequence(lambda n: "Movie Title %s" % n)
-    description = factory.Sequence(lambda n: "Movie Description %s" % n)
+    title = factory.Sequence(lambda n: "FilmWork Title {:02}".format(n))
+    description = factory.Sequence(lambda n: "FilmWork Description %s" % n)
     creation_date = factory.LazyFunction(datetime.datetime.now)
-    certificate = factory.Sequence(lambda n: "Movie Certificate %s" % n)
+    certificate = factory.Sequence(lambda n: "FilmWork Certificate %s" % n)
     rating = random.randint(0, 9)
     type = factory.fuzzy.FuzzyChoice(FilmWork.MovieType.choices, getter=lambda c: c[0])
     uuid = uuid.uuid4()
